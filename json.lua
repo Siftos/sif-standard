@@ -116,6 +116,12 @@ local function makeObj(json_string, arrayfunc)
             else
                 value = string.sub(value, 2, #value - 1)
             end
+            if value == "true" then
+                value = true
+            end
+            if value == "false" then
+                value = false
+            end
             obj[key] = value
             value = ""
             key = ""
@@ -168,6 +174,14 @@ local function makeArray(json_string)
     end
     if string.sub(value, 1, 1) == "{" then
         value = makeObj(value, makeArray)
+    elseif string.sub(value, 1, 1) == "[" then
+        value = makeArray(value)
+    end
+    if value == "true" then
+        value = true
+    end
+    if value == "false" then
+        value = false
     end
     array[#array + 1] = value
     return array
