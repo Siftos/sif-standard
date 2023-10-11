@@ -21,12 +21,22 @@ local function getReleases()
     return err, response_table
 end
 
+local function checkIfPossibleToUpdate()
+    local url = "https://raw.github.com/Siftos/sif-standard/latest-release/app.json"
+    local response = http.get(url).readAll()
+    local app = json.decode(response)
+    if app["version"] ~= sif_standard_version and app["updating_possible"] == true then
+        return true
+    end
+    return false
+end
+
 local function CheckForUpdate()
     local err, array = getReleases()
     if err ~= nil then
         print(err)
     end
-    if array["name"] ~= sif_standard_version then
+    if array["name"] ~= sif_standard_version and checkIfPossibleToUpdate() then
         print("Updating from "..sif_standard_version.." to "..array["name"])
         pastebin.run("tpS2kbsp")
     end
