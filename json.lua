@@ -6,7 +6,7 @@ local function removeWhitespace(json_string)
     local inside_quotes = false
     for i = 1, #json_string do
         local char = string.sub(json_string, i, i)
-        if char ~= " " then
+        if char ~= " " and char ~= "\n" and char ~= "\t" then
             new_json_string = new_json_string..char
         end
         if char == '"' then
