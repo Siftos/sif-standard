@@ -16,7 +16,7 @@ local function removeWhitespace(json_string)
                 inside_quotes = false
             end
         end
-        if char == " " and inside_quotes then
+        if (char == " " or char == "\n" or char == "\t") and inside_quotes then
             new_json_string = new_json_string..char
         end
     end
