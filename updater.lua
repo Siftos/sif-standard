@@ -1,8 +1,6 @@
 os.loadAPI("sif-standard/sifhttp.lua")
 os.loadAPI("sif-standard/json.lua")
 os.loadAPI("sif-standard/pastebin.lua")
---Vars
-local sif_standard_version = "v1.2.5"
 --Functions
 local function getReleases()
     local url = "https://api.github.com/repos/Siftos/sif-standard/releases/latest"
@@ -21,11 +19,18 @@ local function getReleases()
     return err, response_table
 end
 
+local function appJson()
+    local file = fs.open("sif-standard/app.json", "r")
+    result = file.readAll()
+    file.close()
+    return json.decode(result)
+end
+
 local function checkIfPossibleToUpdate()
     local url = "https://raw.github.com/Siftos/sif-standard/latest-release/app.json"
     local response = http.get(url).readAll()
     local app = json.decode(response)
-    if app["version"] ~= sif_standard_version and app["updating_possible"] == true then
+    if app["version"] ~= appJson()["version"] and app["updating_possible"] == true then
         return true
     end
     return false
@@ -36,8 +41,8 @@ local function CheckForUpdate()
     if err ~= nil then
         print(err)
     end
-    if array["name"] ~= sif_standard_version and checkIfPossibleToUpdate() then
-        print("Updating from "..sif_standard_version.." to "..array["name"])
+    if checkIfPossibleToUpdate() then
+        print("Updating from "..appJson()["version"].." to "..array["name"])
         pastebin.run("tpS2kbsp")
     end
 end
