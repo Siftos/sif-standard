@@ -27,6 +27,7 @@ local function CheckForUpdate()
         print(err)
     end
     if array["name"] ~= sif_standard_version then
+        print("Updating from "..sif_standard_version.." to "..array["name"])
         pastebin.run("tpS2kbsp")
     end
 end
