@@ -2,7 +2,7 @@ os.loadAPI("sif-standard/sifhttp.lua")
 os.loadAPI("sif-standard/json.lua")
 os.loadAPI("sif-standard/pastebin.lua")
 --Vars
-local sif_standard_version = "v1.2.2"
+local sif_standard_version = "v1.2.5"
 --Functions
 local function getReleases()
     local url = "https://api.github.com/repos/Siftos/sif-standard/releases/latest"
