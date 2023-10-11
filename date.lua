@@ -1,11 +1,5 @@
+os.loadAPI("sif-standard/sifhttp.lua")
 --functions
-local function checkValidity(url)
-    local success, message = http.checkURL(url)
-    if not success then
-        return message
-    end
-    return nil
-end
 
 local function makeTableFromResponse(response)
     local result = {}
@@ -31,7 +25,7 @@ end
 
 local function Get()
     local url = "http://worldtimeapi.org/api/ip.txt"
-    err = checkValidity(url)
+    err = sifhttp.checkValidity(url)
     if err ~= nil then
         return err, nil
     end
