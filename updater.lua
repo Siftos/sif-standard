@@ -6,7 +6,8 @@ local function appJson()
     local file = fs.open("sif-standard/app.json", "r")
     result = file.readAll()
     file.close()
-    return json.decode(result)
+    local _, app = json.decode(result)
+    return app
 end
 
 local function getLatestRelease()
@@ -37,4 +38,5 @@ end
 
 --Run
 
+--CheckForUpdate()
 CheckForUpdate()
