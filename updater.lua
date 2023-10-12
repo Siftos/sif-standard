@@ -30,9 +30,12 @@ local function CheckForUpdate()
         print(err)
     end
     local app = getLatestRelease()
+    print("Checking for sif-standard updates...")
     if checkIfPossibleToUpdate() then
         print("Updating from "..appJson()["version"].." to "..app["version"])
         pastebin.run("tpS2kbsp")
+    else
+        print("None detected!")
     end
 end
 
