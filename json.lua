@@ -113,14 +113,12 @@ local function makeObj(json_string, arrayfunc)
         else
             if tonumber(value) ~= nil then
                 value = tonumber(value)
+            elseif value == "true" then
+                value = true
+            elseif value == "false" then
+                value = false
             else
                 value = string.sub(value, 2, #value - 1)
-            end
-            if value == "true" then
-                value = true
-            end
-            if value == "false" then
-                value = false
             end
             obj[key] = value
             value = ""
@@ -168,6 +166,12 @@ local function makeArray(json_string)
             elseif string.sub(value, 1, 1) == "[" then
                 value = makeArray(value)
             end
+            if value == "true" then
+                value = true
+            end
+            if value == "false" then
+                value = false
+            end
             array[#array + 1] = value
             value = ""
         end
@@ -189,7 +193,7 @@ end
 
 --Functions
 function decode(json_string)
-    err, jsonstring = removeWhitespace(json_string)
+    err, json_string = removeWhitespace(json_string)
     if err ~= nil then
         return err, nil
     end
