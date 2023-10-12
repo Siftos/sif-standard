@@ -207,7 +207,106 @@ function decode(json_string)
     return nil, obj
 end
 
-function encode(lua_table)
-
+local function lengthOfTable(lua_table)
+    local count = 0
+    for _, _ in pairs(lua_table) do
+        count = count + 1
+    end
+    return count
 end
 
+local function checkIfArray(lua_table)
+    for i, v in pairs(lua_table) do
+        if type(i) ~= "number" then
+            return false
+        end
+    end
+    return true
+end
+
+local function makeJsonObj(lua_table, array_func)
+    local result = "{"
+    local count = 1
+    local length = lengthOfTable(lua_table)
+    for i, v in pairs(lua_table) do
+        local is_table = false
+        if type(v) == "table" then
+            is_table = true
+            if checkIfArray(v) then
+                v = array_func(v)
+            else
+                v = makeJsonObj(v, array_func)
+            end
+        end
+        if type(v) == "string" and not is_table then
+            v = '"'..v..'"'
+        end
+        if type(v) == "boolean" then
+            if v == true then
+                v = "true"
+            else
+                v = "false"
+            end
+        end
+        if type(v) == "number" then
+            v = tostring(v)
+        end
+        result = result..'"'..tostring(i)..'":'..v
+        if count < length then
+            result = result..","  
+        end
+        count = count + 1
+    end
+    result = result.."}"
+    return result
+end
+
+local function makeJsonArray(lua_table)
+    local result = "["
+    local count = 1
+    local length = lengthOfTable(lua_table)
+    for i, v in ipairs(lua_table) do
+        local is_table = false
+        if type(v) == "table" then
+            is_table = true
+            if checkIfArray(v) then
+                v = makeJsonArray(v, makeJsonArray)
+            else
+                v = makeJsonObj(v)
+            end
+        end
+        if type(v) == "string" and not is_table then
+            v = '"'..v..'"'
+        end
+        if type(v) == "boolean" then
+            if v == true then
+                v = "true"
+            else
+                v = "false"
+            end
+        end
+        if type(v) == "number" then
+            v = tostring(v)
+        end
+        result = result..v
+        if count < length then
+            result = result..","  
+        end
+        count = count + 1    
+    end
+    result = result.."]"
+    return result
+end
+
+function encode(lua_table)
+    if not type(lua_table) == "table" then
+        return "the parameter 'lua_table' has to be a table", nil
+    end
+    local result = ""
+    if checkIfArray(lua_table) then
+        result = makeJsonArray(lua_table, 1)
+    else
+        result = makeJsonObj(lua_table, makeJsonArray, 1)
+    end
+    return nil, result
+end
